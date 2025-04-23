@@ -118,30 +118,70 @@ export class Fixed<D extends number = number> implements BigIntFixedInit {
     return this.toZeroHexInit()
   }
 
-  move<D extends number>(decimals: D) {
-    if (this.decimals > decimals)
-      return new Fixed(this.value / BigInts.tensOf(this.decimals - decimals), decimals)
-
-    if (this.decimals < decimals)
-      return new Fixed(this.value * BigInts.tensOf(decimals - this.decimals), decimals)
-
+  as(decimals: number) {
     return new Fixed(this.value, decimals)
   }
 
-  div(other: Fixed) {
-    return new Fixed((this.value * this.tens) / other.move(this.decimals).value, this.decimals)
-  }
-
-  mul(other: Fixed) {
-    return new Fixed((this.value * other.move(this.decimals).value) / this.tens, this.decimals)
+  move(decimals: number) {
+    if (this.decimals > decimals)
+      return new Fixed(this.value / BigInts.tensOf(this.decimals - decimals), decimals)
+    if (this.decimals < decimals)
+      return new Fixed(this.value * BigInts.tensOf(decimals - this.decimals), decimals)
+    return this
   }
 
   add(other: Fixed) {
-    return new Fixed(this.value + other.move(this.decimals).value, this.decimals)
+    const dx = this.decimals
+    const dy = other.decimals
+
+    const dr = Math.max(dx, dy)
+    const tr = BigInts.tensOf(dr)
+
+    const tx = this.tens
+    const ty = other.tens
+
+    const vx = this.value
+    const vy = other.value
+
+    return new Fixed((vx * (tr / tx)) + (vy * (tr / ty)), dr)
   }
 
   sub(other: Fixed) {
-    return new Fixed(this.value - other.move(this.decimals).value, this.decimals)
+    const dx = this.decimals
+    const dy = other.decimals
+
+    const dr = Math.max(dx, dy)
+    const tr = BigInts.tensOf(dr)
+
+    const tx = this.tens
+    const ty = other.tens
+
+    const vx = this.value
+    const vy = other.value
+
+    return new Fixed((vx * (tr / tx)) - (vy * (tr / ty)), dr)
+  }
+
+  mul(other: Fixed) {
+    const dx = this.decimals
+    const dy = other.decimals
+
+    const dr = dx + dy
+
+    const vx = this.value
+    const vy = other.value
+
+    return new Fixed(vx * vy, dr)
+  }
+
+  div(other: Fixed) {
+    const dx = this.decimals
+    const ty = other.tens
+
+    const vx = this.value
+    const vy = other.value
+
+    return new Fixed((vx * ty) / vy, dx)
   }
 
   floor() {

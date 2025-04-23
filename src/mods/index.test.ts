@@ -1,1 +1,1 @@
-console.log("no test")
+export * from "./fixed/index.test.js";
