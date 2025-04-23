@@ -1,7 +1,7 @@
 {
   "type": "module",
   "name": "@hazae41/fixed",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Fixed-point numbers in idiomatic TypeScript",
   "homepage": "https://github.com/hazae41/fixed",
   "repository": "github:hazae41/fixed",
