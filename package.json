@@ -45,6 +45,6 @@
     "unit-tested"
   ],
   "dependencies": {
-    "@hazae41/hex": "^1.0.1"
+    "@hazae41/hexane": "^1.0.11"
   }
 }
